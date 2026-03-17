@@ -1,7 +1,7 @@
 import random as rand
+import load_input
 
-vertices = ['a1', 'a2', 'a3', 'a4', 'a8']
-Edges = [(('a1', 'a4'), 40), (('a4', 'a3'), 30), (('a8', 'a3'), 30)]
+vertices, Edges = load_input.max_cut("input_format")
 
 
 def checkEdge(S, T):
@@ -80,6 +80,9 @@ def random_iteration(num_vertices):
     return highestSolution
 
 
-highestSum = 0
-print(f"{random_iteration(len(vertices))}")
-print(f"{highestSum}")
+HighestSolution = 0
+for i in range(int(len(vertices)/2)):
+    solution = random_iteration(len(vertices))
+    if HighestSolution < solution:
+        HighestSolution = solution
+print(f"{HighestSolution}")
