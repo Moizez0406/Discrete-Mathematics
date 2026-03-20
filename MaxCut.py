@@ -21,8 +21,8 @@ def checkNeighbors(S, T, solution):
         Sn.remove(a)
         Tn.append(a)
         new_solution = checkEdge(Sn, Tn)
-        print(f"Neighbor partition: {Sn} | {Tn}")
-        print(f"Current cut value: {new_solution}")
+        # print(f"Neighbor partition: {Sn} | {Tn}")
+        # print(f"Current cut value: {new_solution}")
         if solution <= new_solution:
             Schosen = Sn.copy()
             Tchosen = Tn.copy()
@@ -33,8 +33,8 @@ def checkNeighbors(S, T, solution):
         Tn.remove(a)
         Sn.append(a)
         new_solution = checkEdge(Sn, Tn)
-        print(f"Neighbor partition: {Sn} | {Tn}")
-        print(f"Current cut value: {new_solution}")
+        # print(f"Neighbor partition: {Sn} | {Tn}")
+        # print(f"Current cut value: {new_solution}")
         if solution <= new_solution:
             Schosen = Sn.copy()
             Tchosen = Tn.copy()
@@ -57,31 +57,31 @@ def random_iteration(num_vertices):
     # Check for Cuts on edges
     Schosen = S.copy()
     Tchosen = T.copy()
-    print(f"Current partition: {S} | {T}")
-    print(f"Current cut value: {checkEdge(S, T)}")
+    # print(f"Current partition: {S} | {T}")
+    # print(f"Current cut value: {checkEdge(S, T)}")
     solution = checkEdge(S, T)
     # Check for neighbors:
     improved = True
     highestSolution = solution
     while improved:
-        print("========== Climbing ?")
+        # print("========== Climbing ?")
         improved = False
         Schosen, Tchosen, highestSolution = checkNeighbors(
             S, T, solution)
         if highestSolution > solution:
             improved = True
-            print(f"-- Yes, Climbing")
+            # print(f"-- Yes, Climbing")
             S = Schosen.copy()
             T = Tchosen.copy()
             solution = highestSolution
         else:
-            print(f"-- No, :(")
+            # print(f"-- No, :(")
             break
     return highestSolution
 
 
 HighestSolution = 0
-for i in range(int(len(vertices)/2)):
+for i in range(100):
     solution = random_iteration(len(vertices))
     if HighestSolution < solution:
         HighestSolution = solution
