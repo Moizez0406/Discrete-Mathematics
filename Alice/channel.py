@@ -17,14 +17,11 @@ print("SERVER| Waiting for Alice...")
 alice_conn, _ = alice_server.accept()
 print("SERVER| Alice connected")
 
+msg = utils.rcv_msg(bob_conn)  # Bob → Alice (public key)
+print(f"[Eve intercepts] {msg}")
+utils.send_msg(alice_conn, msg)
 # Forward everything in both directions, Eve reads along
 while True:
-    msg = utils.rcv_msg(bob_conn)  # Bob → Alice (public key)
-    if not msg:
-        break
-    print(f"[Eve intercepts] {msg}")
-    utils.send_msg(alice_conn, msg)
-
     msg = utils.rcv_msg(alice_conn)  # Alice → Bob
     if not msg:
         break

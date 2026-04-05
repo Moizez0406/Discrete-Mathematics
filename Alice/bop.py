@@ -1,5 +1,6 @@
 import socket
 import utils
+import rsa
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -11,10 +12,9 @@ conn, addr = server.accept()
 print("Bop| Connected, sending public key...")
 
 # Mock key
-n = 3233
-e = 17
-d = 2753
-
+p = 2861
+q = 2803
+n, e, d, phi = rsa.generate_key(p, q)
 utils.send_msg(conn, {"type": "public_key", "n": str(n), "e": str(e)})
 
 # Now wait for the ciphertext from Alice
@@ -25,6 +25,6 @@ while True:
     if msg["type"] == "ciphertext":
         c = int(msg["c"])
         m = pow(c, d, n)  # decrypt
-        print(f"BOP| Received ciphertext c={c}, decrypted m={m}")
+        print(f"BOP| Received ciphertext c={c}, decrypted m={rsa.int2string(m)}")
 
 conn.close()
