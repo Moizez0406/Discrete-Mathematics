@@ -2,7 +2,7 @@
 
 ## 👥 Team Members
 * **Jair Mendoza (269615):** Environment and communication logic.
-* **Kiroloes Ghebrial (------):** Intercept and decryption logic.
+* **Kiroloes Ghebrial (294502):** Intercept and decryption logic.
 
 ---
 
@@ -11,17 +11,19 @@
 ### 🖥️ Terminal
 Each script must be run in a **separate terminal window**. Launch them in the following order:
 
-1. `launch bob.py`
-2. `launch channel.py`
-3. `launch alice.py`
-4. `launch eve.py`
+1. `python channel.py` - Starts the relay that forwards messages
+2. `python bob.py` - Starts Bob (receiver)
+3. `python eve.py` - Starts Eve (eavesdropper)
+4. `python alice.py` - Starts Alice (sender)
 
-#### 📨 Sending Messages
-* You can input messages via the **alice.py** terminal.
-* **Constraint:** The message must be smaller than the RSA key size.
-* **Automation:** You can uncomment/comment lines in `alice.py` to enable automatic message sequences.
+> **Note:** Bob, Eve, and Channel keep running. You can run Alice many times without restarting the others.
 
----
+#### 📨 Sending Messages with Alice
+When `alice.py` runs, you can type messages in its terminal:
 
-## 🛠️ Tui
-Maybe will be implemented
+| Command | What it does |
+|---------|---------------|
+| `Hello Bob` | Sends a short message |
+| `large:Your long text here` | Sends a long message (splits into blocks) |
+| `quit` | Closes Alice's connection |
+
