@@ -22,14 +22,13 @@ def modinv(e, phi):
 def generate_key(p, q):
     n = p * q
     phi = (p-1)*(q-1)
-    for i in range(3, phi): #if started from 2 e will almost always be 2
+    for i in range(3, phi): 
         e = i;
         if gcd(e, phi) == 1:
             break
     d = modinv(e, phi)
     return n, e, d, phi
 
-# S2: Enryption
 def string2int(msg):
     return int.from_bytes(msg.encode('utf-8'), byteorder='big') 
 def int2string(n):
