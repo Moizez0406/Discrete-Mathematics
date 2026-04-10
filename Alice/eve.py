@@ -24,8 +24,20 @@ def factor_trial_division(n):
             return i, n // i
     return None, None
 
+def decrypt_large_message(words, d, n):
+    msg_bytes = b''
+    max_word_bytes = (n.bit_length() - 1) // 8 - 1
+    
+    for c in words:
+        m = pow(c, d, n)
+        word_bytes = m.to_bytes(max_word_bytes, byteorder='big')
+        msg_bytes += word_bytes
+    
+    return msg_bytes.rstrip(b'\x00').decode('utf-8')
+
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(("localhost", 5003))
+print("Eve| Connected to channel")
 
 public_key = utils.rcv_msg(client)
 n = int(public_key["n"])
@@ -38,30 +50,48 @@ p, q = factor_trial_division(n)
 
 if p is None:
     print("Eve| Failed to factor n")
-    client.close()
-    exit()
+    d = None
+else:
+    phi = (p - 1) * (q - 1)
+    d = mod_inverse(e, phi)
+    end = time.time()
+    print(f"Eve| Found p={p}, q={q}")
+    print(f"Eve| Recovered private key d={d}")
+    print(f"Eve| Attack time: {end - start:.6f} seconds")
 
-phi = (p - 1) * (q - 1)
-d = mod_inverse(e, phi)
-end = time.time()
-
-print(f"Eve| Found p={p}, q={q}")
-print(f"Eve| Recovered private key d={d}")
-print(f"Eve| Attack time: {end - start:.6f} seconds")
+words = []
+expected_len = 0
 
 while True:
-    msg = utils.rcv_msg(client)
-    if not msg:
+    try:
+        msg = utils.rcv_msg(client)
+        if not msg:
+            break
+        if msg["type"] == "done":
+            break
+        elif msg["type"] == "ciphertext":
+            c = int(msg["c"])
+            print(f"Eve| Intercepted ciphertext: {c}")
+            if d is not None:
+                m = pow(c, d, n)
+                plaintext = rsa.int2string(m)
+                print(f"Eve| Decrypted: '{plaintext}'")
+        elif msg["type"] == "words":
+            expected_len = int(msg["len"])
+            words = []
+            print(f"Eve| Large message: {expected_len} blocks")
+        elif msg["type"] == "cipherword":
+            c = int(msg["c"])
+            words.append(c)
+            print(f"Eve| Block {len(words)}/{expected_len}")
+            if len(words) == expected_len and d is not None:
+                result = decrypt_large_message(words, d, n)
+                print(f"Eve| Decrypted large message: '{result}'")
+                words = []
+                expected_len = 0
+    except Exception as e:
+        print(f"Eve| Error: {e}")
         break
 
-    print(f"Eve| Intercepted: {msg}")
-
-    if msg["type"] == "ciphertext":
-        c = int(msg["c"])
-        m = pow(c, d, n)
-        plaintext = rsa.int2string(m)
-
-        print(f"Eve| Ciphertext: {c}")
-        print(f"Eve| Decrypted message: {plaintext}")
-
 client.close()
+print("Eve| Disconnected")

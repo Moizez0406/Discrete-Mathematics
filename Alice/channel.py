@@ -22,18 +22,18 @@ print("SERVER| Waiting for Alice...")
 alice_conn, _ = alice_server.accept()
 print("SERVER| Alice connected")
 print("SERVER| Waiting for Eve...")
-#eve_conn, _ = eve_server.accept()
+eve_conn, _ = eve_server.accept()
 print("SERVER| Eve connected")
 
 msg = utils.rcv_msg(bob_conn)  # Bob → Alice (public key)
 utils.send_msg(alice_conn, msg)
 print(f"[Eve intercepts] {msg}")
-#utils.send_msg(eve_conn, msg) # Eve save msg
+utils.send_msg(eve_conn, msg) # Eve save msg
 while True:
     msg = utils.rcv_msg(alice_conn)  # Alice → Bob
     if not msg:
         break
-    #utils.send_msg(eve_conn, msg) # Eve save msg
+    utils.send_msg(eve_conn, msg) # Eve save msg
     print(f"[Eve intercepts] {msg}")
     utils.send_msg(bob_conn, msg)
     if msg["type"] == "done":
