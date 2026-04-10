@@ -34,7 +34,28 @@ def string2int(msg):
 def int2string(n):
     return n.to_bytes((n.bit_length()+7)//8, byteorder='big').decode('utf-8')
 
-# EXAMPLE
+def encryptLargeMessage(fat_message,e, n):
+    msg_bytes = fat_message.encode('utf-8')
+    words= []
+    max_word_bytes = (n.bit_length() - 1) // 8 - 1
+    for i in range(0, len(msg_bytes), max_word_bytes):
+        word = msg_bytes[i:i + max_word_bytes]
+        if len(word) < max_word_bytes:
+            word = word.ljust(max_word_bytes, b'\x00')
+        m = int.from_bytes(word, byteorder='big')
+        c = pow(m, e, n)
+        words.append(c)
+    return words
+def decryptLargeMessage(words, d, n):
+    max_word_bytes = (n.bit_length() - 1) // 8 - 1
+    msg_bytes = b''
+
+    for c in words:
+        m = pow(c, d, n)
+        word_bytes = m.to_bytes(max_word_bytes, byteorder='big')
+        msg_bytes += word_bytes
+
+    return msg_bytes.rstrip(b'\x00').decode('utf-8')
 # msg = 'Alo'
 # m = string2int(msg) 
 # c = pow(m, e, n)
