@@ -11,10 +11,12 @@ print("Bop| Waiting for connection...")
 conn, addr = server.accept()
 print("Bop| Connected, sending public key...")
 
-# Mock key
-p = 2861
-q = 2803
+#p = 2861
+p = 6011
+q = 7717
+#q = 2803
 n, e, d, phi = rsa.generate_key(p, q)
+print(f"Key size: {phi}")
 utils.send_msg(conn, {"type": "public_key", "n": str(n), "e": str(e)})
 
 # Now wait for the ciphertext from Alice

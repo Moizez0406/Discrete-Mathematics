@@ -20,8 +20,10 @@ print("SERVER| Connected to Bop")
 # Wait for Alice
 print("SERVER| Waiting for Alice...")
 alice_conn, _ = alice_server.accept()
-eve_conn, _ = eve_server.accept()
 print("SERVER| Alice connected")
+print("SERVER| Waiting for Eve...")
+eve_conn, _ = eve_server.accept()
+print("SERVER| Eve connected")
 
 msg = utils.rcv_msg(bob_conn)  # Bob → Alice (public key)
 utils.send_msg(alice_conn, msg)
