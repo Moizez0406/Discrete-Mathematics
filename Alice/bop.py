@@ -18,28 +18,62 @@ q = 100937
 n, e, d, phi = rsa.generate_key(p, q)
 print(f"Key size: {phi}")
 utils.send_msg(conn, {"type": "public_key", "n": str(n), "e": str(e)})
+print("Bop| Waiting for messages...")
 
 words = []
 expected_len = 0
 while True:
-    msg = utils.rcv_msg(conn)
-    if not msg:
-        break
-    if msg["type"] == "done":
-        break
-    elif msg["type"] == "ciphertext":
-        c = int(msg["c"])
-        m = pow(c, d, n)
-        print(f"[Bob] Decrypted: '{rsa.int2string(m)}'")
-    elif msg["type"] == "words":
-        expected_len = int(msg["len"])
-        words = []
-    elif msg["type"] == "cipherword":
-        c = int(msg["c"])
-        words.append(c)
-        if len(words) == expected_len:
-            result = rsa.decryptLargeMessage(words, d, n)
-            print(f"[Bob] Decrypted large message: '{result}'")
+    try:
+        msg = utils.rcv_msg(conn)
+        if not msg:
+            print("Bob| Connection lost")
+            break
+
+        if msg["type"] == "done":
+            print("Bob| Received done signal, closing")
+            break
+
+        elif msg["type"] == "ciphertext":
+            c = int(msg["c"])
+            m = pow(c, d, n)
+            print(f"Bob| Received: '{rsa.int2string(m)}'")
+
+        elif msg["type"] == "words":
+            expected_len = int(msg["len"])
             words = []
-            expected_len = 0
+            print(f"Bob| Receiving large message ({expected_len} blocks)...")
+
+        elif msg["type"] == "cipherword":
+            c = int(msg["c"])
+            words.append(c)
+            if len(words) == expected_len:
+                result = rsa.decryptLargeMessage(words, d, n)
+                print(f"Bob| Received large message: '{result}'")
+                words = []
+                expected_len = 0
+
+    except Exception as e:
+        print(f"Bob| Error: {e}")
+   #     print(f"Bob| Error: {e}")
+    #    break
+   # msg = utils.rcv_msg(conn)
+    #if not msg:
+    #    break
+    #if msg["type"] == "done":
+    #    break
+    #elif msg["type"] == "ciphertext":
+    #    c = int(msg["c"])
+    #    m = pow(c, d, n)
+    #    print(f"[Bob] Decrypted: '{rsa.int2string(m)}'")
+    #elif msg["type"] == "words":
+    #    expected_len = int(msg["len"])
+    #    words = []
+    #elif msg["type"] == "cipherword":
+    #    c = int(msg["c"])
+    #    words.append(c)
+#:words    if len(words) == expected_len:
+    #        result = rsa.decryptLargeMessage(words, d, n)
+    #        print(f"[Bob] Decrypted large message: '{result}'")
+    #        words = []
+    #        expected_len = 0
 conn.close()

@@ -63,32 +63,38 @@ words = []
 expected_len = 0
 
 while True:
+
     try:
         msg = utils.rcv_msg(client)
         if not msg:
+            print("Eve| Connection closed")
             break
+
         if msg["type"] == "done":
+            print("Eve| Done signal received")
             break
+
         elif msg["type"] == "ciphertext":
             c = int(msg["c"])
-            print(f"Eve| Intercepted ciphertext: {c}")
             if d is not None:
                 m = pow(c, d, n)
                 plaintext = rsa.int2string(m)
-                print(f"Eve| Decrypted: '{plaintext}'")
+                print(f"Eve| Intercepted: '{plaintext}'")
+
         elif msg["type"] == "words":
             expected_len = int(msg["len"])
             words = []
-            print(f"Eve| Large message: {expected_len} blocks")
+            print(f"Eve| Large message incoming ({expected_len} blocks)")
+
         elif msg["type"] == "cipherword":
             c = int(msg["c"])
             words.append(c)
-            print(f"Eve| Block {len(words)}/{expected_len}")
             if len(words) == expected_len and d is not None:
                 result = decrypt_large_message(words, d, n)
-                print(f"Eve| Decrypted large message: '{result}'")
+                print(f"Eve| Intercepted large message: '{result}'")
                 words = []
                 expected_len = 0
+
     except Exception as e:
         print(f"Eve| Error: {e}")
         break
