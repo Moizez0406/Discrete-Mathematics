@@ -81,11 +81,8 @@ def random_iteration(num_vertices):
 
 
 HighestSolution = 0
-<<<<<<< HEAD
-for i in range(100):
-=======
+
 for i in range(150):
->>>>>>> ca33a25 (Adding base server structure for rsa)
     solution = random_iteration(len(vertices))
     if HighestSolution < solution:
         HighestSolution = solution
