@@ -25,23 +25,45 @@ def relative_cmplt(a, b, universal):
     new_set = complement(a, universal)
     return inter(new_set, b)
 
-def cartesian_product(a, b):
-    new_sets = []
-    for element in a:
-        new_sets.append([element, x] for x in b])
-    return new_sets
+def cartesian_product(a, b, flattern = False):
+    size = len(a) * len(b)
+    groups = 2
+    base = [[] for _ in range(size)]
+    i = 0
+    if flattern:
+        i = 0
+        base = [[] for _ in range(len(a)*len(b))]
+        for element in a:
+            for pair in b:
+                base[i] = element + [pair]
+                i+=1
+    else:
+        for element in a:
+            for pair in b:
+                base[i].append(element)
+                base[i].append(pair)
+                i+=1
+
+
+    return base
 
 def power(a):
     bin_set = [0,1]
     new_sets = []
-    temp_sets = bin_set.copy()
-    for _ in range(len(a)):
-        new_sets = cartesian_product(temp_sets, bin_set)
-        temp_sets = new_sets.copy()
+    first = cartesian_product(bin_set, bin_set)
 
-    for value in temp_sets:
-        if value:
-           pass 
+    if len(a) > 2:
+        for _ in range(len(a)-1):
+            new_sets = cartesian_product(first, bin_set, True)
 
+        final_set = [[] for _ in range(len(new_sets))]
+        index = 0
+        for element in new_sets:
+            for i in range(len(element)):
+                if element[i]:
+                    final_set[index].append(a[i])
+            index += 1
+
+        return final_set
     return new_sets
 
