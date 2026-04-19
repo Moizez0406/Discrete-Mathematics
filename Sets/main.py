@@ -4,7 +4,7 @@ x = ['a', 'b', 'c']
 y = [2, 3]
 a = [0,1,2,3,8]
 b = [2,3,4,5,9]
-c = [2,3,6,7, 8, 9]
+c = [4,5,6,7,8]
 universal = [0,1,2,3,4,5,6,7,8,9]
 union = sets.union(a,b)
 intersection = sets.inter(a,b)
@@ -39,8 +39,9 @@ print("------"*7)
 
 a = sets.build_set('a', [0,1,2,3,8])
 b = sets.build_set('b', [2,3,4,5,9])
+c = sets.build_set('c', [4,5,6,7,8])
 universal = sets.build_set('universal', [0,1,2,3,4,5,6,7,8,9])
-list_sets = [a,b,universal]
+list_sets = [a,b,c,universal]
 
 print("Enter q to exit")
 print("Enter add to add a new set (NOT IMPLEMENTED)")
