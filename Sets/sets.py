@@ -70,14 +70,47 @@ def power(a):
             index += 1
 
         return final_set
+    return a
+
+def characteristic(a, u):
+    # a = subset, u = set
+    new_sets = []
+    for element in u:
+        if element in a:
+            new_sets.append(1)
+        else:
+            new_sets.append(0)
     return new_sets
 
+def in_ex(sets):
+    n = len(sets)
+    total = 1
+    for _ in range(n):
+        total *= 2
+
+    result = 0
+    for mask in range(1, total):
+        subset = []
+        for j in range(n):
+            if (mask >> j) & 1:
+                subset.append(sets[j])
+
+        intersection = subset[0].copy()
+        for k in range(1, len(subset)):
+            intersection = inter(intersection, subset[k])
+
+        if len(subset) % 2 == 1:
+            result += len(intersection)
+        else:
+            result -= len(intersection)
+
+    return result
 
 def build_set(name, values):
     return [name, values]
 
-
 def eval(expression, list_sets):
+    #This implemenatition is probabily wrong
     i = 0
     a = None
     result = ["r", []]
