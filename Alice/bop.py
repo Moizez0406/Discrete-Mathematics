@@ -13,8 +13,8 @@ print("Bop| Connected, sending public key...")
 
 #p = 2861
 #q = 2803
-p = 100987
-q = 100937
+p = 1001989
+q = 1001983
 n, e, d, phi = rsa.generate_key(p, q)
 print(f"Key size: {phi}")
 utils.send_msg(conn, {"type": "public_key", "n": str(n), "e": str(e)})

@@ -22,6 +22,7 @@ def modinv(e, phi):
 def generate_key(p, q):
     n = p * q
     phi = (p-1)*(q-1)
+    #e = 65537
     for i in range(3, phi): 
         e = i;
         if gcd(e, phi) == 1:

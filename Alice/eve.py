@@ -27,12 +27,12 @@ def factor_trial_division(n):
 def decrypt_large_message(words, d, n):
     msg_bytes = b''
     max_word_bytes = (n.bit_length() - 1) // 8 - 1
-    
+
     for c in words:
         m = pow(c, d, n)
         word_bytes = m.to_bytes(max_word_bytes, byteorder='big')
         msg_bytes += word_bytes
-    
+
     return msg_bytes.rstrip(b'\x00').decode('utf-8')
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

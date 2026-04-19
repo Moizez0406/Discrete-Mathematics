@@ -22,10 +22,12 @@ def complement(set, universal):
     return new_set
 
 
-def relative_cmplt(a, b, universal):
-    # We assume a, b E U set
-    new_set = complement(a, universal)
-    return inter(new_set, b)
+def relative_cmplt(a, b):
+    new_set = []
+    for element in a:
+        if element not in b:
+            new_set.append(element)
+    return new_set
 
 
 def cartesian_product(a, b, flattern=False):
@@ -116,39 +118,54 @@ def eval(expression, list_sets):
                 i = 0
 
         elif expression[i] == "n":
-            if a:
-                b = read(expression[i + 1])
+            if result[1]:
+                b, _ = read(expression[i + 1])
             else:
-                a, b = read(expression[i - 1], expression[i + 1])
-            return inter(a, b)
+                result[1], b = read(expression[i - 1], expression[i + 1])
+            result[1] = inter(result[1], b)
+            if expression[i + 2] != 'E':
+                expression = result[0] + expression[i+2:]
+                i = 0
 
         elif expression[i] == "'":
-            if a:
-                return complement(a, universal)
+            if result[1]:
+                result[1] = complement(result[1], universal)
             else:
-                a = read(expression[i - 1])
-                return complement(a, universal)
+                result[1], _ = read(expression[i - 1])
+            result[1] = complement(result[1], universal)
+            if expression[i + 1] != 'E':
+                expression = result[0] + expression[i+1:]
+                i = 0
 
         elif expression[i] == "_":
-            if a:
-                b = read(expression[i + 1])
+            if result[1]:
+                b, _ = read(expression[i + 1])
             else:
-                a, b = read(expression[i - 1], expression[i + 1])
-            return relative_cmplt(a, b, universal)
+                result[1], b = read(expression[i - 1], expression[i + 1])
+            result[1] = relative_cmplt(result[1], b)
+            if expression[i + 2] != 'E':
+                expression = result[0] + expression[i+2:]
+                i = 0
 
         elif expression[i] == "x":
-            if a:
-                b = read(expression[i + 1])
+            if result[1]:
+                b, _ = read(expression[i + 1])
             else:
-                a, b = read(expression[i - 1], expression[i + 1])
-            return cartesian_product(a, b)
+                result[1], b = read(expression[i - 1], expression[i + 1])
+            result[1] = cartesian_product(result[1], b)
+            if expression[i + 2] != 'E':
+                expression = result[0] + expression[i+2:]
+                i = 0
 
         elif expression[i] == "P":
-            if a:
-                return power(a)
+            if expression[1]:
+                result[1] =  power(result[1])
             else:
-                a = read(expression[i + 1])
-            return power(a)
+                result[1]= read(expression[i + 1])
+            result[1] = power(result[1])
+            if expression[i + 2] != 'E':
+                expression = result[0] + expression[i+2:]
+                i = 0
         i += 1
 
     return result[1]
