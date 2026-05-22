@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Barcelona AQ Sensors | Graph Analysis</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+
+<div class="loading" id="loading">Loading sensors...</div>
+
+<div class="controls">
+  <label>Connection radius (km)</label>
+  <input type="range" id="radius" min="1" max="15" step="0.5" value="5">
+  <div class="value" id="radiusVal">5 km</div>
+
+  <label>Map brightness</label>
+  <input type="range" id="brightness" min="0.2" max="1" step="0.05" value="0.4">
+  <div class="value" id="brightVal">0.40</div>
+
+  <label>Graph traversal</label>
+  <button id="dfsBtn">Run DFS (Purple)</button>
+  <button id="bfsBtn">Run BFS (Orange)</button>
+</div>
+
+<div id="map"></div>
+
+<div class="stats-panel" id="statsPanel">
+  <div><strong>📊 Network Stats</strong></div>
+  <div>Vertices: <span id="statVertices">—</span></div>
+  <div>Edges: <span id="statEdges">—</span></div>
+  <div>Density: <span id="statDensity">—</span></div>
+  <div>Connected: <span id="statConnected">—</span></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="sentilo.js"></script>
+
+</body>
+</html>
