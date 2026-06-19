@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Barcelona AQ Sensors | Graph Analysis</title>
+  <title>Barcelona AQ Sensors | Best Routing Path (4 Sensors)</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Barcelona AQ Sensors | Best Routing Path</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link rel="stylesheet" href="style.css"/>
@@ -15,8 +23,8 @@
 
 <div class="controls">
   <label>Connection radius (km)</label>
-  <input type="range" id="radius" min="1" max="15" step="0.5" value="5">
-  <div class="value" id="radiusVal">5 km</div>
+  <input type="range" id="radius" min="1" max="15" step="0.5" value="9">
+  <div class="value" id="radiusVal">9 km</div>
 
   <label>Map brightness</label>
   <input type="range" id="brightness" min="0.2" max="1" step="0.05" value="0.4">
@@ -25,6 +33,15 @@
   <label>Graph traversal</label>
   <button id="dfsBtn">Run DFS (Purple)</button>
   <button id="bfsBtn">Run BFS (Orange)</button>
+
+  <label style="margin-top: 12px;"> Best Routing Path (4 sensors)</label>
+  <select id="sensor1"></select>
+  <select id="sensor2"></select>
+  <select id="sensor3"></select>
+  <select id="sensor4"></select>
+  
+  <button id="findPathBtn" style="margin-top: 10px;">Find Best Route</button>
+  <button id="clearPathBtn">Clear Path</button>
 </div>
 
 <div id="map"></div>
